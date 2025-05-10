@@ -24,3 +24,17 @@ class NewsController extends GetxController {
     }
   }
 }
+void fetchArticles() async {
+  try {
+    isLoading(true);
+    print('Fetching articles...');
+    var fetchedArticles = await NewsService.fetchNews();
+    print('Fetched articles: ${fetchedArticles.length}');
+    articles.assignAll(fetchedArticles);
+  } catch (e) {
+    print('Error fetching articles: $e');
+  } finally {
+    print('Finished fetching articles');
+    isLoading(false);
+  }
+}

@@ -21,7 +21,7 @@ class NewsController extends GetxController {
       isLoading(true); // Start loading
       final response = await http.get(
         Uri.parse(
-          'https://newsapi.org/v2/top-headlines?country=us&apiKey=YOUR_API_KEY',
+          'https://newsapi.org/v2/top-headlines?country=us&apiKey=07ef64cec4684d13ac9de33d01ebd515',
         ),
       );
 

@@ -12,6 +12,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   get: ^4.6.6   # ✅ Added GetX package
+  http: ^0.13.6
+  url_launcher: ^6.2.5
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

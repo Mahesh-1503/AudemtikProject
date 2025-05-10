@@ -1,40 +1,42 @@
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../models/article_model.dart';
-import '../services/news_service.dart';
 
 class NewsController extends GetxController {
-  var isLoading = true.obs;
-  var articles = <Article>[].obs;
+  var isLoading = true.obs; // This should be defined as an observable RxBool
+  var articles =
+      <Article>[]
+          .obs; // This should be defined as an observable list of articles
 
   @override
   void onInit() {
-    fetchArticles();
     super.onInit();
+    fetchArticles();
   }
 
-  void fetchArticles() async {
+  // Fetch news articles
+  Future<void> fetchArticles() async {
     try {
-      isLoading(true);
-      var fetchedArticles = await NewsService.fetchNews();
-      articles.assignAll(fetchedArticles);
-    } catch (e) {
-      print('Error fetching articles: $e');
+      isLoading(true); // Start loading
+      final response = await http.get(
+        Uri.parse(
+          'https://newsapi.org/v2/top-headlines?country=us&apiKey=YOUR_API_KEY',
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        List<Article> fetchedArticles =
+            (data['articles'] as List)
+                .map((article) => Article.fromJson(article))
+                .toList();
+        articles.assignAll(fetchedArticles); // Assign the fetched articles
+      } else {
+        throw Exception('Failed to load articles');
+      }
     } finally {
-      isLoading(false);
+      isLoading(false); // Stop loading
     }
-  }
-}
-void fetchArticles() async {
-  try {
-    isLoading(true);
-    print('Fetching articles...');
-    var fetchedArticles = await NewsService.fetchNews();
-    print('Fetched articles: ${fetchedArticles.length}');
-    articles.assignAll(fetchedArticles);
-  } catch (e) {
-    print('Error fetching articles: $e');
-  } finally {
-    print('Finished fetching articles');
-    isLoading(false);
   }
 }
